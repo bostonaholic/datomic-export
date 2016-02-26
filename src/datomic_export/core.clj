@@ -26,6 +26,11 @@
          (remove exclusions)
          sort)))
 
+(defn- pluralize [s count]
+  (if (= count 1)
+    s
+    (str s "s")))
+
 (defn to-csv
   "Export a datomic database to a CSV file."
   {:arglists '([uri filepath]) :added "0.1.0"}
@@ -34,5 +39,5 @@
         db (d/db conn)
         attributes (schema-attributes db)]
     (println "=== Connected to" uri "\n")
-    (println "=== Found" (count attributes) "attributes")
+    (println "=== Found" (count attributes) (pluralize "attribute" (count attributes)))
     (pprint attributes)))
