@@ -13,9 +13,9 @@
 
    Accepts the following options:
 
-  :exclude - exclude these attributes, takes precedence over :include
+   :exclude - exclude these attributes, takes precedence over :include
 
-  :include - include only these attributes"
+   :include - include only these attributes"
 
   {:arglists '([uri filepath] [uri filepath & options]) :added "0.1.0"}
 
