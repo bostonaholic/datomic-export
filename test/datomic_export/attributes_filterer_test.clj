@@ -1,16 +1,8 @@
 (ns datomic-export.attributes-filterer-test
   (:require [clojure.test :refer :all]
             [datomic.api :as d]
-            [datomic-export.attributes-filterer :refer :all]))
-
-(def uri "datomic:mem://test")
-
-(defn- db-setup [uri schema]
-  (d/delete-database uri)
-  (d/create-database uri)
-  (let [conn (d/connect uri)]
-    (d/transact conn schema)
-    conn))
+            [datomic-export.attributes-filterer :refer :all]
+            [datomic-export.test-helpers :as helpers]))
 
 (deftest filter-attributes-test
   (let [schema [{:db/id (d/tempid :db.part/db)
@@ -19,7 +11,7 @@
                  :db/ident :bar}
                 {:db/id (d/tempid :db.part/db)
                  :db/ident :baz}]
-        conn (db-setup uri schema)
+        conn (helpers/db-setup schema)
         db (d/db conn)]
 
     (testing "filters all datomic attributes"
