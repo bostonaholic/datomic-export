@@ -14,7 +14,7 @@
         conn (helpers/db-setup schema)
         db (d/db conn)]
 
-    (testing "filters all datomic attributes"
+    (testing "filters only datomic attributes"
       (is (= #{:foo :bar :baz}
              (filter-attributes db nil nil))))
 
