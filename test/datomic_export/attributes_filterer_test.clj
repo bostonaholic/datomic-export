@@ -16,15 +16,15 @@
 
     (testing "filters only datomic attributes"
       (is (= #{:foo :bar :baz}
-             (filter-attributes db nil nil))))
+             (filter-attributes db))))
 
     (testing "exclusions"
       (is (= #{:bar :baz}
-             (filter-attributes db #{:foo} nil))))
+             (filter-attributes db #{:foo} #{}))))
 
     (testing "inclusions"
       (is (= #{:bar :baz}
-             (filter-attributes db nil #{:bar :baz}))))
+             (filter-attributes db #{} #{:bar :baz}))))
 
     (testing "exclusions take precedence over inclusions"
       (is (= #{:bar :baz}

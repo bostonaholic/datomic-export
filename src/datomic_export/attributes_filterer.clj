@@ -29,8 +29,10 @@
     (not-empty include) (set/intersection s include)
     :else s))
 
-(defn filter-attributes [db exclude include]
-  (-> (attributes db)
-      set
-      (set/difference datomic-attributes)
-      (user-filters exclude include)))
+(defn filter-attributes
+  ([db] (filter-attributes db #{} #{}))
+  ([db exclude include]
+   (-> (attributes db)
+       set
+       (set/difference datomic-attributes)
+       (user-filters exclude include))))
