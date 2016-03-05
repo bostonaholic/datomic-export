@@ -17,13 +17,13 @@
 
    :include - include only these attributes"
 
-  {:arglists '([uri filepath] [uri filepath & options]) :added "0.1.0"}
+  {:arglists '([datomic-uri file-url] [datomic-uri file-url & options]) :added "0.1.0"}
 
-  [uri filepath & options]
+  [datomic-uri file-url & options]
 
   (let [{:keys [exclude include]} options
-        db (d/db (d/connect uri))
+        db (d/db (d/connect datomic-uri))
         attributes (filter-attributes db exclude include)]
-    (println "=== Connected to" uri "\n")
+    (println "=== Connected to" datomic-uri "\n")
     (println "=== Found" (count attributes) (pluralize "attribute" (count attributes)))
     (pprint (sort attributes))))
