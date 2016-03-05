@@ -4,9 +4,11 @@
             [datomic-export.attributes-filterer :refer [filter-attributes]]))
 
 (defn- pluralize [s count]
-  (if (= count 1)
-    s
-    (str s "s")))
+  (cond
+    (= count 1) s
+    (= (last s) \y) (str (apply str (butlast s)) "ies")
+    (= (last s) \x) (str s "es")
+    :else (str s "s")))
 
 (defn to-csv
   "Export a datomic database to a CSV file.
