@@ -23,7 +23,7 @@
 
   [datomic-uri file-url & options]
 
-  (let [{:keys [exclude include]} options
+  (let [{:keys [^java.util.Set exclude ^java.util.Set include]} options
         db (d/db (d/connect datomic-uri))
         attributes (filter-attributes db exclude include)]
     (println "=== Connected to" datomic-uri "\n")
