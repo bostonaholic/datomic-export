@@ -1,7 +1,8 @@
 (ns datomic-export.core
   (:require [clojure.pprint :refer [pprint]]
             [datomic.api :as d]
-            [datomic-export.attributes-filterer :refer [filter-attributes]]))
+            [datomic-export.attributes-filterer :refer [filter-attributes]]
+            [datomic-export.entity-finder :refer [find-entities]]))
 
 (defn- pluralize [s count]
   (cond
@@ -25,7 +26,10 @@
 
   (let [{:keys [^java.util.Set exclude ^java.util.Set include]} options
         db (d/db (d/connect datomic-uri))
-        attributes (filter-attributes db exclude include)]
-    (println "=== Connected to" datomic-uri "\n")
-    (println "=== Found" (count attributes) (pluralize "attribute" (count attributes)))
-    (pprint (sort attributes))))
+        attributes (filter-attributes db exclude include)
+        entities (find-entities db attributes)]
+    (println "=== Connected to" datomic-uri)
+    (println "\n" "=== Found" (count attributes) (pluralize "attribute" (count attributes)))
+    (pprint (sort attributes))
+    (println "\n" "=== Found" (count entities) (pluralize "entity" (count entities)))
+    (pprint (sort entities))))
