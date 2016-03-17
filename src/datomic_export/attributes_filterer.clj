@@ -25,8 +25,8 @@
 
 (defn- user-filters [s exclude include]
   (cond
-    (not-empty exclude) (set/difference s exclude)
-    (not-empty include) (set/intersection s include)
+    (not-empty exclude) (set/difference s (set exclude))
+    (not-empty include) (set/intersection s (set include))
     :else s))
 
 (defn filter-attributes

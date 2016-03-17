@@ -24,7 +24,7 @@
 
   [datomic-uri file-url & options]
 
-  (let [{:keys [^java.util.Set exclude ^java.util.Set include]} options
+  (let [{:keys [exclude include]} options
         db (d/db (d/connect datomic-uri))
         attributes (filter-attributes db exclude include)
         entities (find-entities db attributes)]
