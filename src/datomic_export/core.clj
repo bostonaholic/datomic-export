@@ -2,7 +2,8 @@
   (:require [clojure.pprint :refer [pprint]]
             [datomic.api :as d]
             [datomic-export.attributes-filterer :refer [filter-attributes]]
-            [datomic-export.entity-finder :refer [find-entities]]))
+            [datomic-export.csv-writer :as csv]
+            [datomic-export.entity-puller :refer [pull-entities]]))
 
 (defn- pluralize [s count]
   (cond
@@ -27,9 +28,11 @@
   (let [{:keys [exclude include]} options
         db (d/db (d/connect datomic-uri))
         attributes (filter-attributes db exclude include)
-        entities (find-entities db attributes)]
+        entities (pull-entities db attributes)]
     (println "=== Connected to" datomic-uri)
     (println "\n" "=== Found" (count attributes) (pluralize "attribute" (count attributes)))
     (pprint (sort attributes))
     (println "\n" "=== Found" (count entities) (pluralize "entity" (count entities)))
-    (pprint (sort entities))))
+    (pprint entities)
+    (println "\n" "=== Writing to" file-url)
+    #_(csv/write file-url entities attributes)))
