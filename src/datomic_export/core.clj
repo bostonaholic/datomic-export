@@ -36,3 +36,12 @@
     (pprint entities)
     (println "\n" "=== Writing to" file-url)
     #_(csv/write file-url entities attributes)))
+
+(defn -main [datomic-uri file-url & options]
+  (let [options (apply hash-map options)
+        exclude (when (get options ":exclude")
+                  (read-string (get options ":exclude")))
+        include (when (get options ":include")
+                  (read-string (get options ":include")))]
+    (to-csv datomic-uri file-url :exclude exclude :include include))
+  (System/exit 0))
