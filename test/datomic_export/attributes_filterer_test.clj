@@ -28,4 +28,4 @@
 
     (testing "exclusions take precedence over inclusions"
       (is (= #{:bar :baz}
-             (filter-attributes db '(:foo) '(:bar :baz)))))))
+             (filter-attributes db '(:foo) '(:foo :bar :baz)))))))
