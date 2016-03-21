@@ -14,7 +14,9 @@ $ lein db:export datomic:dev://localhost:4334/database /tmp/file
 
 ```clojure
 (require '[datomic-export.core :as export])
-(export/to-csv "datomic:dev://localhost:4334/database" "/tmp/file")
+(require '[datomic.api :as d])
+(def db (d/db (d/connect "datomic:dev://localhost:4334/database")))
+(export/to-csv db "/tmp/file")
 ```
 
 ### Options
