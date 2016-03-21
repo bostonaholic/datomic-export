@@ -25,16 +25,14 @@
 
    --include - Only returns entities with any of these attributes. And writes only these attributes."
 
-  {:arglists '([datomic-uri file-url] [datomic-uri file-url & options]) :added "0.1.0"}
+  {:arglists '([db file-url] [db file-url & options]) :added "0.1.0"}
 
-  [datomic-uri file-url & options]
+  [db file-url & options]
 
   (let [{:keys [exclude include]} options
-        db (d/db (d/connect datomic-uri))
         attributes (filter-attributes db exclude include)
         entities (pull-entities db attributes)]
     (when *verbose*
-      (println "=== Connected to" datomic-uri)
       (println "\n=== Found" (count attributes) (pluralize "attribute" (count attributes)))
       (pprint (sort attributes))
       (println "\n=== Found" (count entities) (pluralize "entity" (count entities)))
@@ -48,6 +46,7 @@
           exclude (when (get opts "--exclude")
                     (read-string (get opts "--exclude")))
           include (when (get opts "--include")
-                    (read-string (get opts "--include")))]
-      (to-csv datomic-uri file-url :exclude exclude :include include)))
+                    (read-string (get opts "--include")))
+          db (d/db (d/connect datomic-uri))]
+      (to-csv db file-url :exclude exclude :include include)))
   (System/exit 0))
