@@ -13,10 +13,13 @@ $ lein db:export datomic:dev://localhost:4334/database /tmp/file
 ### Clojure
 
 ```clojure
-(require '[datomic-export.core :as export])
-(require '[datomic.api :as d])
-(def db (d/db (d/connect "datomic:dev://localhost:4334/database")))
-(export/to-csv db "/tmp/file")
+user> (require '[datomic-export.core :as export])
+nil
+user> (require '[datomic.api :as d])
+nil
+user> (def db (d/db (d/connect "datomic:dev://localhost:4334/database")))
+#'user/db
+user> (export/to-csv db "/tmp/file")
 ```
 
 ### Options
