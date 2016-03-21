@@ -17,6 +17,8 @@
 
    Accepts the following options:
 
+   --verbose
+
    :exclude - exclude these attributes, takes precedence over :include
 
    :include - include only these attributes"
@@ -25,23 +27,26 @@
 
   [datomic-uri file-url & options]
 
-  (let [{:keys [exclude include]} options
+  (let [{:keys [exclude include verbose]} options
         db (d/db (d/connect datomic-uri))
         attributes (filter-attributes db exclude include)
         entities (pull-entities db attributes)]
-    (println "=== Connected to" datomic-uri)
-    (println "\n" "=== Found" (count attributes) (pluralize "attribute" (count attributes)))
-    (pprint (sort attributes))
-    (println "\n" "=== Found" (count entities) (pluralize "entity" (count entities)))
-    (pprint entities)
-    (println "\n" "=== Writing to" file-url)
+    (when verbose
+      (println "=== Connected to" datomic-uri)
+      (println "\n=== Found" (count attributes) (pluralize "attribute" (count attributes)))
+      (pprint (sort attributes))
+      (println "\n=== Found" (count entities) (pluralize "entity" (count entities)))
+      (pprint entities)
+      (println "\n=== Writing to" file-url))
     #_(csv/write file-url entities attributes)))
 
 (defn -main [datomic-uri file-url & options]
-  (let [options (apply hash-map options)
+  (let [verbose (some #{"--verbose"} options)
+        options (remove #{"--verbose"} options)
+        options (apply hash-map options)
         exclude (when (get options ":exclude")
                   (read-string (get options ":exclude")))
         include (when (get options ":include")
                   (read-string (get options ":include")))]
-    (to-csv datomic-uri file-url :exclude exclude :include include))
+    (to-csv datomic-uri file-url :exclude exclude :include include :verbose verbose))
   (System/exit 0))
