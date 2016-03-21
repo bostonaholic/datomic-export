@@ -21,9 +21,9 @@
 
    --verbose
 
-   --exclude - exclude these attributes, takes precedence over :include
+   --exclude - Will not return entities with any of these attributes. Takes precedence over '--include'.
 
-   --include - include only these attributes"
+   --include - Only returns entities with any of these attributes. And writes only these attributes."
 
   {:arglists '([datomic-uri file-url] [datomic-uri file-url & options]) :added "0.1.0"}
 
