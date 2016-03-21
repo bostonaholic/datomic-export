@@ -5,6 +5,8 @@
             [datomic-export.csv-writer :as csv]
             [datomic-export.entity-puller :refer [pull-entities]]))
 
+(def ^:dynamic *verbose* false)
+
 (defn- pluralize [s count]
   (cond
     (= count 1) s
@@ -19,19 +21,19 @@
 
    --verbose
 
-   :exclude - exclude these attributes, takes precedence over :include
+   --exclude - exclude these attributes, takes precedence over :include
 
-   :include - include only these attributes"
+   --include - include only these attributes"
 
   {:arglists '([datomic-uri file-url] [datomic-uri file-url & options]) :added "0.1.0"}
 
   [datomic-uri file-url & options]
 
-  (let [{:keys [exclude include verbose]} options
+  (let [{:keys [exclude include]} options
         db (d/db (d/connect datomic-uri))
         attributes (filter-attributes db exclude include)
         entities (pull-entities db attributes)]
-    (when verbose
+    (when *verbose*
       (println "=== Connected to" datomic-uri)
       (println "\n=== Found" (count attributes) (pluralize "attribute" (count attributes)))
       (pprint (sort attributes))
@@ -41,12 +43,11 @@
     (csv/write file-url entities attributes)))
 
 (defn -main [datomic-uri file-url & options]
-  (let [verbose (some #{"--verbose"} options)
-        options (remove #{"--verbose"} options)
-        options (apply hash-map options)
-        exclude (when (get options ":exclude")
-                  (read-string (get options ":exclude")))
-        include (when (get options ":include")
-                  (read-string (get options ":include")))]
-    (to-csv datomic-uri file-url :exclude exclude :include include :verbose verbose))
+  (binding [*verbose* (some #{"--verbose"} options)]
+    (let [opts (apply hash-map (remove #{"--verbose"} options))
+          exclude (when (get opts "--exclude")
+                    (read-string (get opts "--exclude")))
+          include (when (get opts "--include")
+                    (read-string (get opts "--include")))]
+      (to-csv datomic-uri file-url :exclude exclude :include include)))
   (System/exit 0))
