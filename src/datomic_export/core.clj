@@ -38,7 +38,7 @@
       (println "\n=== Found" (count entities) (pluralize "entity" (count entities)))
       (pprint entities)
       (println "\n=== Writing to" file-url))
-    #_(csv/write file-url entities attributes)))
+    (csv/write file-url entities attributes)))
 
 (defn -main [datomic-uri file-url & options]
   (let [verbose (some #{"--verbose"} options)
