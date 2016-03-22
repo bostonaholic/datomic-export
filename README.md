@@ -34,6 +34,10 @@ user> (export/to-csv db "/tmp/file")
 
 ```
 $ lein db:export datomic:dev://localhost:4334/database /tmp/file --verbose --include (:person/name :person/email)
+$ cat /tmp/file
+:person/email,:person/name
+john@example.com,John Johnson
+alice@example.com,Alice Alison
 ```
 
 ## License
