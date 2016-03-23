@@ -1,5 +1,6 @@
 (ns datomic-export.core
   (:require [clojure.pprint :refer [pprint]]
+            [clojure.string :as str]
             [datomic.api :as d]
             [datomic-export.attributes-filterer :refer [filter-attributes]]
             [datomic-export.csv-writer :as csv]
@@ -10,7 +11,7 @@
 (defn- pluralize [s count]
   (cond
     (= count 1) s
-    (= (last s) \y) (str (apply str (butlast s)) "ies")
+    (= (last s) \y) (str (str/join (butlast s)) "ies")
     (= (last s) \x) (str s "es")
     :else (str s "s")))
 
