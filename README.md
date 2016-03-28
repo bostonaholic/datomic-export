@@ -42,6 +42,16 @@ $ cat /tmp/file
 4321,The Bar Company,,,
 ```
 
+```clojure
+user> (require '[datomic-export.core :as export])
+nil
+user> (require '[datomic.api :as d])
+nil
+user> (def db (d/db (d/connect "datomic:dev://localhost:4334/database")))
+#'user/db
+user> (export/to-csv db "/tmp/file" :verbose true :include '(:person/name :person/email :person/company :company/name))
+```
+
 ## License
 
 Copyright © 2016 Matthew Boston

@@ -6,8 +6,6 @@
             [datomic-export.csv-writer :as csv]
             [datomic-export.entity-puller :refer [pull-entities]]))
 
-(def ^:dynamic *verbose* false)
-
 (defn- pluralize [s count]
   (cond
     (= count 1) s
@@ -20,20 +18,20 @@
 
    Accepts the following options:
 
-   --verbose
+   :verbose
 
-   --exclude - Will not return entities with any of these attributes. Takes precedence over '--include'.
+   :exclude - Will not return entities with any of these attributes. Takes precedence over ':include'.
 
-   --include - Only returns entities with any of these attributes. And writes only these attributes."
+   :include - Only returns entities with any of these attributes. And writes only these attributes."
 
   {:arglists '([db file-url] [db file-url & options]) :added "0.1.0"}
 
   [db file-url & options]
 
-  (let [{:keys [exclude include]} options
+  (let [{:keys [verbose exclude include]} options
         attributes (filter-attributes db exclude include)
         entities (pull-entities db attributes)]
-    (when *verbose*
+    (when verbose
       (println "\n=== Found" (count attributes) (pluralize "attribute" (count attributes)))
       (pprint (sort attributes))
       (println "\n=== Found" (count entities) (pluralize "entity" (count entities)))
@@ -42,12 +40,12 @@
     (csv/write file-url entities attributes)))
 
 (defn -main [datomic-uri file-url & options]
-  (binding [*verbose* (some #{"--verbose"} options)]
-    (let [opts (apply hash-map (remove #{"--verbose"} options))
-          exclude (when (get opts "--exclude")
-                    (read-string (get opts "--exclude")))
-          include (when (get opts "--include")
-                    (read-string (get opts "--include")))
-          db (d/db (d/connect datomic-uri))]
-      (to-csv db file-url :exclude exclude :include include)))
+  (let [verbose (some #{"--verbose"} options)
+        opts (apply hash-map (remove #{"--verbose"} options))
+        exclude (when (get opts "--exclude")
+                  (read-string (get opts "--exclude")))
+        include (when (get opts "--include")
+                  (read-string (get opts "--include")))
+        db (d/db (d/connect datomic-uri))]
+    (to-csv db file-url :verbose verbose :exclude exclude :include include))
   (System/exit 0))
