@@ -17,9 +17,9 @@ user> (require '[datomic-export.core :as export])
 nil
 user> (require '[datomic.api :as d])
 nil
-user> (def db (d/db (d/connect "datomic:dev://localhost:4334/database")))
-#'user/db
-user> (export/to-csv db "/tmp/file")
+user> (def conn (d/connect "datomic:dev://localhost:4334/database"))
+#'user/conn
+user> (export/to-csv (d/db conn) "/tmp/file")
 ```
 
 ### Options
@@ -47,9 +47,9 @@ user> (require '[datomic-export.core :as export])
 nil
 user> (require '[datomic.api :as d])
 nil
-user> (def db (d/db (d/connect "datomic:dev://localhost:4334/database")))
-#'user/db
-user> (export/to-csv db "/tmp/file" :verbose true :include '(:person/name :person/email :person/company :company/name))
+user> (def conn (d/connect "datomic:dev://localhost:4334/database"))
+#'user/conn
+user> (export/to-csv (d/db conn) "/tmp/file" :verbose true :include '(:person/name :person/email :person/company :company/name))
 ```
 
 ## License
